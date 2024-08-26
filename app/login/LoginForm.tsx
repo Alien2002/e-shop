@@ -32,7 +32,7 @@ const LoginForm = ({currentUser}: CurrentUserProps) => {
                 router.push("/")
                 router.refresh()
             }
-        }, [])
+        },[])
 
 
         //checking if the user is already logged...

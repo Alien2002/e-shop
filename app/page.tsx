@@ -1,9 +1,6 @@
-import Image from "next/image";
-import Navbar from "./components/Navbar/navbar";
 import HomeBanner from "./components/HomeBanner";
 import Container from "./components/Container/Container";
 import { products } from "@/utilities/products";
-import { TruncateText } from "@/utilities/truncateText";
 import ProductCard from "./components/products/ProductCard";
 
 export default function Home() {

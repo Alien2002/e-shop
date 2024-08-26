@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
 import "./globals.css";
 import Navbar from "./components/Navbar/navbar";
 import Footer from "./components/Footer/footer";
 import { CartContextProvider } from "@/hooks/useCart";
 import {Toaster} from 'react-hot-toast'
-import { getCurrentUser } from "@/actions/getCurrentUser";
 
 
 export const metadata: Metadata = {
@@ -18,7 +16,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
 
   return (
     <html lang="en">

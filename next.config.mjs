@@ -3,7 +3,11 @@ const nextConfig = {
     // configuring images...
 
     images: {
-      domains: ['m.media-amazon.com'],
+      domains: [
+        'm.media-amazon.com',
+        'lh3.googleusercontent.com',
+        'firebasestorage.googleapis.com'
+      ],
     },
   
   

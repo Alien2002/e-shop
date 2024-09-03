@@ -1,7 +1,6 @@
 'use client'
 
 import { CartProductType } from "@/app/product/[productId]/ProductDetails";
-import product from "@/app/product/page";
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
@@ -9,7 +8,7 @@ type CartContextType = {
     CartTotalQuantity: number,
     cartItemsTotalCost: number,
     CartProducts: CartProductType[] | null,
-    handleAddProductToCart: (product: CartProductType) => void,
+    handleAddProductToCart: (product: CartProductType, isUserLoggedIn?: boolean) => void,
     handleRemoveItemFromCart: (product: CartProductType) => void,
     handleCartQuantityIncrease: (product: CartProductType) => void,
     handleCartQuantityDecrease: (product: CartProductType) => void,
@@ -26,6 +25,7 @@ export const CartContextProvider = (props: Props) => {
     const [CartTotalQuantity, setCartTotalQuantity] = useState(0)
     const [CartProducts, setCartProducts] = useState<CartProductType[] | null>(null)
     const [cartItemsTotalCost, setcartItemsTotalCost] = useState(0)
+    const [isUserLoggedIn, setIsUserLoggedIn] = useState();
 
     //setting cart product at initial loading... 
     useEffect(() => {
@@ -34,6 +34,12 @@ export const CartContextProvider = (props: Props) => {
 
         setCartProducts(cProduct)
     },[])
+
+    // useEffect(() => {
+    //     if(!isUserLoggedIn) {
+    //         localStorage.setItem('EshopCartItems', JSON.stringify(null))
+    //     }
+    // },[isUserLoggedIn])
 
     //calculating subtotal cost of the products in the cart...
     useEffect(() =>{
@@ -59,9 +65,12 @@ export const CartContextProvider = (props: Props) => {
     }, [CartProducts])
 
     //adding products to cart...
-    const handleAddProductToCart = useCallback((product: CartProductType)=>{
+    const handleAddProductToCart = useCallback((product: CartProductType, isUserLoggedIn?: boolean)=>{
+        if(!isUserLoggedIn) {
+            return toast('You have to log in first...')
+        }
         setCartProducts((prev) => {
-            let updatedCart;
+            let updatedCart: CartProductType[];
 
             if(prev) {
                 updatedCart = [...prev, product]
@@ -138,6 +147,8 @@ export const CartContextProvider = (props: Props) => {
         localStorage.setItem('EshopCartItems', JSON.stringify(null))
     }, [CartProducts])
 
+    
+
     const value = {
         CartTotalQuantity,
         CartProducts,
@@ -147,7 +158,6 @@ export const CartContextProvider = (props: Props) => {
         handleCartQuantityDecrease,
         handleClearCart,
         cartItemsTotalCost
-
     }
     return <CartContext.Provider value={value} {...props}/>
 }

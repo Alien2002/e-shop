@@ -14,7 +14,7 @@ const ItemContent = ({item}: ItemContentProps) => {
     const {handleRemoveItemFromCart, handleCartQuantityIncrease, handleCartQuantityDecrease} = useCart()
   return (
     <div className='grid grid-cols-5 text-[0.9rem] items-center gap-4 pb-2'>
-        <div className=' flex col-span-2 justify-self-start'>
+        <div className=' flex col-span-2 justify-self-start gap-4'>
             <Link href={`/product/${item.id}`}>
                 <div className="relative w-[70px] aspect-square">
                     <Image 

@@ -36,9 +36,10 @@ export type SelectedImage = {
 
 interface ProductDetailsProps {
     product: any;
+    isUserLoggedIn: boolean;
 }
 
-const ProductDetails = ({product}: ProductDetailsProps) => {
+const ProductDetails = ({product, isUserLoggedIn}: ProductDetailsProps) => {
     console.log(product)
 
     const {handleAddProductToCart, CartProducts} = useCart()
@@ -51,7 +52,7 @@ const ProductDetails = ({product}: ProductDetailsProps) => {
         brand: product.brand,
         selectedImage: {...product.images[0]},
         quantity: 1,
-        price: product.price
+        price: product.price,
     })
 
     //routing variable
@@ -124,7 +125,7 @@ const ProductDetails = ({product}: ProductDetailsProps) => {
                 <Horizontal />
 
                 {/*checking if product is in cart and displaying alternating views...*/}
-                {isProductInCart? 
+                {(isProductInCart && isUserLoggedIn)? 
                     <div>
                         <p className='flex mb-2'>
                             <MdCheckCircle className='text-teal-400' size={20}/>
@@ -137,7 +138,8 @@ const ProductDetails = ({product}: ProductDetailsProps) => {
                                 onclick={() => router.push('/cart')}
                             />
                         </div>
-                    </div> : 
+                    </div> 
+                : 
                     <div><SetColor
                         images={product.images}
                         cartProduct={cartProduct}
@@ -153,7 +155,7 @@ const ProductDetails = ({product}: ProductDetailsProps) => {
                         <div className='max-w-[400px]'>
                             <Button 
                                 label='Add to Cart'
-                                onclick={() => {handleAddProductToCart(cartProduct)}}
+                                onclick={() => {handleAddProductToCart(cartProduct, isUserLoggedIn)}}
                             />
                         </div>
                     </div>

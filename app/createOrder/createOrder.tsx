@@ -40,34 +40,24 @@ const CreateOrder = ({currentUser}: {currentUser: any}) => {
     
     const router = useRouter()
 
-    if(!currentUser) {
-        return <div className='flex flex-col items-center'>
-            <div className='text-2xl'>You have to log in to make an order...</div>
-            <div>
-                <Link href={'/login'} className='text-slate-500 flex items-center gap-1 mt-2'>
-                    <MdArrowBack />
-                    <span>Log in...</span>
-                </Link>
-            </div>
-        </div>
-    }
-
     //handling accept terms..........
     const termsAccepted = useCallback(() => {
       setAcceptTerms(!acceptTerms)
     },[])
 
-
+    
+    
+    
     //retrieving data from localstorage database..............
     useEffect(() => {
-        const cartItems: any = localStorage.getItem('EshopCartItems')
-        const cProduct: cartProductType[] | null = JSON.parse(cartItems)
-
-        setProductsChoosen(cProduct)
+      const cartItems: any = localStorage.getItem('EshopCartItems')
+      const cProduct: cartProductType[] | null = JSON.parse(cartItems)
+      
+      setProductsChoosen(cProduct)
     },[])
-
-
-
+    
+    
+    
     const {register, handleSubmit, formState: {errors}} = useForm<FieldValues>({
       defaultValues: {
         amount,
@@ -83,7 +73,7 @@ const CreateOrder = ({currentUser}: {currentUser: any}) => {
         products: productsChoosen,
       }
     })
-
+    
     const onSubmit: SubmitHandler<FieldValues> = async (data) => {
       
       const userId = currentUser.id
@@ -93,7 +83,7 @@ const CreateOrder = ({currentUser}: {currentUser: any}) => {
           products: productsChoosen,
           userId: userId,
           amount: cartItemsTotalCost,
-
+          
         }
         //posting the product to mongo database....
         axios.post('/api/createOrder', dataToUpload).then(() => {
@@ -106,6 +96,18 @@ const CreateOrder = ({currentUser}: {currentUser: any}) => {
           setIsLoading(false)
         })
       }
+    }
+    
+    if(!currentUser) {
+        return <div className='flex flex-col items-center'>
+            <div className='text-2xl'>You have to log in to make an order...</div>
+            <div>
+                <Link href={'/login'} className='text-slate-500 flex items-center gap-1 mt-2'>
+                    <MdArrowBack />
+                    <span>Log in...</span>
+                </Link>
+            </div>
+        </div>
     }
 
   return (
@@ -124,7 +126,7 @@ const CreateOrder = ({currentUser}: {currentUser: any}) => {
             </div>
             <hr />
             {productsChoosen?.map((product) => {
-              return <div className='grid grid-cols-4 text-xs gap-2 pb-2 items-center text-slate-600'>
+              return <div key={product.id} className='grid grid-cols-4 text-xs gap-2 pb-2 items-center text-slate-600'>
                 <div className='col-span-2 justify-self-start'>{product.name}</div>
                 <div className='justify-self-center'>{product.quantity}</div>
                 <div className='justify-self-end'>{formatPrice(product.quantity * product.price)}</div>

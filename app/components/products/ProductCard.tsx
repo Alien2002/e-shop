@@ -31,6 +31,7 @@ const ProductCard: React.FC<ProductCardProps> = ({data}) => {
             <div className="aspect-square overflow-hidden relative w-full">
                 {data.images.map((img) => {
                     return <Image 
+                        key={img.color}
                         src={img.image}
                         alt={data.name}
                         fill

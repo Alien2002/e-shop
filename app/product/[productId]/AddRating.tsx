@@ -21,17 +21,14 @@ const AddRating = ({product, user}: AddRatingProps) => {
     const[isLoading, setIsLoading] = useState(false)
     const router = useRouter()
 
-    if(!user) {
-        return null
-    }
-
+    
     const {register, handleSubmit, setValue, reset, formState: {errors}} = useForm<FieldValues>({
         defaultValues: {
             comment: '',
             rating: 0
         }
     })
-
+    
     const setCustomValue = (id:string, value:any) => {
         setValue(id, value, {
             shouldTouch: true,
@@ -39,16 +36,20 @@ const AddRating = ({product, user}: AddRatingProps) => {
             shouldValidate:true
         })
     }
-
+    
+    if(!user) {
+        return null
+    }
+    
     const onSubmit: SubmitHandler<FieldValues> = async (data) => {
         setIsLoading(true)
-
+        
         const ratingData = {
             ...data,
             userId: user.id,
             product: product
         }
-
+        
         axios.post('/api/rating', ratingData).then(() => {
             toast.success('Comment Submitted')
             router.refresh()
@@ -59,7 +60,7 @@ const AddRating = ({product, user}: AddRatingProps) => {
             setIsLoading(false)
         })
     }
-
+    
     if(!user || !product) return null;
 
     //checking if the user had already made an order once and it was delivered.........

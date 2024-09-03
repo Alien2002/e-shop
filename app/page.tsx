@@ -3,8 +3,6 @@ export const revalidate = 0;
 import HomeBanner from "./components/HomeBanner";
 import Container from "./components/Container/Container";
 import ProductCard from "./components/products/ProductCard";
-import Prisma from "@/libs/prismadb";
-import { useSearchParams } from "next/navigation";
 import getProducts, { ProductParams } from "@/actions/getProducts";
 import NullData from "./components/NullData";
 

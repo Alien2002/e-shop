@@ -1,5 +1,6 @@
 import { getCurrentUser } from "@/actions/getCurrentUser";
 import { NextResponse } from "next/server";
+import Prisma from "@/libs/prismadb"
 
 export async function PUT(request: Request) {
     const currentUser = await getCurrentUser()
@@ -11,7 +12,7 @@ export async function PUT(request: Request) {
     const body = await request.json()
     const {id, deliveryStatus} = body
 
-    const updatedProduct = await prisma?.order.update({
+    const updatedProduct = await Prisma?.order.update({
         where: {
             id: id
         },

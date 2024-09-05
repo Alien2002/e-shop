@@ -16,7 +16,7 @@ let params: any;
 
 const Cartegory = ({label, icon: Icon, selected}: CategoryProps) => {
     params = useSearchParams()
-    const router = useRouter()
+    const router = useRouter();
     
     const handleClick = useCallback(() => {
         if(label === 'All') {

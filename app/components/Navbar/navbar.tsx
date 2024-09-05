@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import Link from 'next/link'
 import Container from '../Container/Container'
 import CartCounter from './CartCounter'
@@ -26,7 +26,9 @@ const Navbar = async () => {
                 
             </Container>
         </div>
+        <Suspense fallback={<>Loading...</>}>
             <Cartegories />
+        </Suspense>
         
         
     </div>

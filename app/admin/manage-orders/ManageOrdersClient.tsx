@@ -31,7 +31,7 @@ const ManageOrdersClient = ({orders}: ManageOrdersClientProps) => {
       return {
         id: order.id,
         customer: order.user.name,
-        amount: formatPrice(order.amount / 100),
+        amount: formatPrice(order.amount),
         paymentStatus: order.status,
         date: moment(order.createdDate).fromNow(),
         deliveryStatus: order.deliveryStatus,

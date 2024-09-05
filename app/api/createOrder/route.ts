@@ -1,5 +1,6 @@
 import { getCurrentUser } from "@/actions/getCurrentUser";
 import { NextResponse } from "next/server";
+import Prisma from "@/libs/prismadb"
 
 export async function POST(request: Request) {
     //getting the user..........
@@ -13,7 +14,7 @@ export async function POST(request: Request) {
     const body = await request.json();
     const {userId, amount, status, deliveryAddress: {region, line1, district, street}, deliveryStatus, createdDate, products} = body
 
-    const addedOrder = await prisma?.order.create({
+    const addedOrder = await Prisma?.order.create({
         data: {
             userId,
             amount,
@@ -30,7 +31,7 @@ export async function POST(request: Request) {
         },
     })
 
-    console.log (addedOrder)
+    console.log (">>>>>>>>>",addedOrder)
 
     return NextResponse.json(addedOrder)
 }

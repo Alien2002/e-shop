@@ -1,5 +1,5 @@
 import { getCurrentUser } from "@/actions/getCurrentUser";
-import prisma from "@/libs/prismadb"
+import Prisma from "@/libs/prismadb"
 import { NextResponse } from "next/server"
 
 //POST request.......
@@ -16,7 +16,7 @@ export async function POST(request: Request) {
     const {name, description, price, brand, category, inStock, images} = body;
 
 
-    const product = await prisma.product.create({
+    const product = await Prisma.product.create({
         data: {
             name,
             description,
@@ -47,7 +47,7 @@ export async function PUT(request: Request) {
     const body = await request.json();
     const {id, inStock} = body
 
-    const product = await prisma.product.update({
+    const product = await Prisma.product.update({
         where: {id},
         data: {inStock}
     })

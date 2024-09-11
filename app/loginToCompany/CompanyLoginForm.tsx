@@ -9,12 +9,12 @@ import Link from 'next/link'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
-import { safeUser } from '@/types'
+import { safeUser, userWithCompany } from '@/types'
 import NullData from '../components/NullData'
 import axios from 'axios'
 
 interface CurrentUserProps {
-    currentUser: safeUser
+    currentUser: userWithCompany
 }
 
 const LoginForm = ({currentUser}: CurrentUserProps) => {
@@ -34,7 +34,7 @@ const LoginForm = ({currentUser}: CurrentUserProps) => {
                 router.push('/loginToCompany')
                 router.refresh()
             }
-        })      
+        }, [])      
         if(currentUser?.company) {
             return<>
                 <NullData title='Already registered a company. Redirecting to company Login page' />

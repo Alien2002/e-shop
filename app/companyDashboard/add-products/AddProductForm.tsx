@@ -55,21 +55,17 @@ const AddProductForm = ({currentUser}: currentUserProps) => {
     })
 
     //if user has no company return null and redirect
-    if(!currentUser.company) {
-      return <NullData title="Your need to Register your company" />
-    }
     useEffect(() => {
-      if(!currentUser) return;
       if(!currentUser.company) {
         router.push('/registerCompany')
         router.refresh()
       }
     },[currentUser])
-
+    
     useEffect(() => {
       setCustomValue('images', images)
     },[images]);
-
+    
     useEffect(() => {
       if(isProductCreated){
         reset()
@@ -77,11 +73,11 @@ const AddProductForm = ({currentUser}: currentUserProps) => {
         setIsProductCreated(false)
       }
     },[isProductCreated])
-
+    
     const onSubmit: SubmitHandler<FieldValues> = async (data) => {
       //uploading images to firebase............................................
       let uploadedImages: UploadedImageType[] = []
-
+      
       //returning an error if category is not specified...
       if(!data.category) {
         setIsLoading(false)
@@ -92,7 +88,7 @@ const AddProductForm = ({currentUser}: currentUserProps) => {
         setIsLoading(false)
         return toast.error('No selected Image...')
       }
-
+      
       //handling the upload process....
       const handleImageUpload = async () => {
         toast('Creating product. Please wait...')
@@ -101,11 +97,11 @@ const AddProductForm = ({currentUser}: currentUserProps) => {
           for (const item of data.images) {
             if(item.image){
               const fileName = new Date().getTime() + '-' + item.image.name
-
+              
               //creating firebase storage...
               const storage = getStorage(firebaseApp);
               const storageRef = ref(storage, `products/${fileName}`)
-
+              
               //uploading the file
               const uploadTask = uploadBytesResumable(storageRef, item.image)
               
@@ -123,85 +119,89 @@ const AddProductForm = ({currentUser}: currentUserProps) => {
                       case 'running':
                         console.log('Upload is running');
                         break;
-                    }
-                  }, 
-                  (error) => {
-                    console.log("Error Uploading image....", error)
-                    reject(error)
-                  }, 
-                  () => {
-                    // Handle successful uploads on complete
-                    // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-                    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                      uploadedImages.push({
-                        ...item,
-                        image: downloadURL
-                      })
-                      console.log('File available at', downloadURL);
-                      resolve()
-
-                    }).catch((error) => {
-                      console.log("Error while getting the download URL...", error)
+                      }
+                    }, 
+                    (error) => {
+                      console.log("Error Uploading image....", error)
                       reject(error)
-                    });
-                  }
-                );
-              })
+                    }, 
+                    () => {
+                      // Handle successful uploads on complete
+                      // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+                      getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                        uploadedImages.push({
+                          ...item,
+                          image: downloadURL
+                        })
+                        console.log('File available at', downloadURL);
+                        resolve()
+                        
+                      }).catch((error) => {
+                        console.log("Error while getting the download URL...", error)
+                        reject(error)
+                      });
+                    }
+                  );
+                })
+              }
             }
+          } catch (error) {
+            setIsLoading(false)
+            console.log('Error handling Images Upload...', error)
+            return toast.error('Error handling Images Upload...')
           }
-        } catch (error) {
+        }
+        
+        await handleImageUpload();
+        const productData = {...data, images: uploadedImages}
+        
+        //posting the product to mongo database....
+        axios.post('/api/addCompanyProducts', productData).then(() => {
+          toast.success('Product Successfully added...')
+          setIsProductCreated(true)
+          router.refresh()
+        }).catch((error) => {
+          toast.error('Something went wrong while connecting to database...')
+          console.log('Errorr...>>>>>', error)
+        }).finally(() => {
           setIsLoading(false)
-          console.log('Error handling Images Upload...', error)
-          return toast.error('Error handling Images Upload...')
-        }
+        })
       }
-
-      await handleImageUpload();
-      const productData = {...data, images: uploadedImages}
       
-      //posting the product to mongo database....
-      axios.post('/api/addCompanyProducts', productData).then(() => {
-        toast.success('Product Successfully added...')
-        setIsProductCreated(true)
-        router.refresh()
-      }).catch((error) => {
-        toast.error('Something went wrong while connecting to database...')
-        console.log('Errorr...>>>>>', error)
-      }).finally(() => {
-        setIsLoading(false)
-      })
-    }
-
-    const category = watch('category');
-    const setCustomValue = (id: string, value: any) => {
-      setValue(id, value, {
-        shouldValidate: true,
-        shouldDirty: true,
-        shouldTouch: true,
-      })
-    }
-
-    //helper functions
-    const addImageToState = useCallback((value: ImageType) => {
-      setImages((prev) => {
-        if(!prev){
-          return [value]
-        }
-
-        return [...prev, value]
-      })
-    }, []);
-
-    const removeImageFromState = useCallback((value: ImageType) => {
-      setImages((prev) => {
-        if(prev) {
-          const filteredImages = prev.filter((item) => {item.color !== value.color})
-          return filteredImages
-        }
-
-        return prev
-      })
-    },[])
+      const category = watch('category');
+      const setCustomValue = (id: string, value: any) => {
+        setValue(id, value, {
+          shouldValidate: true,
+          shouldDirty: true,
+          shouldTouch: true,
+        })
+      }
+      
+      //helper functions
+      const addImageToState = useCallback((value: ImageType) => {
+        setImages((prev) => {
+          if(!prev){
+            return [value]
+          }
+          
+          return [...prev, value]
+        })
+      }, []);
+      
+      const removeImageFromState = useCallback((value: ImageType) => {
+        setImages((prev) => {
+          if(prev) {
+            const filteredImages = prev.filter((item) => {item.color !== value.color})
+            return filteredImages
+          }
+          
+          return prev
+        })
+      },[])
+      
+      if(!currentUser.company) {
+        return <NullData title="Your need to Register your company" />
+      }
 
   return (
     <>

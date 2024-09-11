@@ -47,45 +47,47 @@ const RegisterForm = ({currentUser}: CurrentUserProps) => {
         })
     },[])
 
-    //checking if user is logged in and display a message instead of form...
-    if(!currentUser) {
-        return <NullData title='You have to log in first...' />
-    }
-
+    
     useEffect(() => {
       if(!currentUser) return;
       if(currentUser.company) {
         router.push('/companyDashboard')
       }
     },[currentUser])
-
+    
     //if having a company prevent new registration.........
     if(currentUser.company) {
       return <>
         <NullData title='Already have a company...'
           paragraph={`${currentUser.company.companyName.toUpperCase()} is Registered under your email already.`}
           redirectMsg='Redirecting...'
-        />
+          />
       </>
     }
-
+    
     const onsubmit: SubmitHandler<FieldValues> = (data) => {
-        setisLoading(true)
-
-        const updatedData = {...data, productCategories: pcategories}
-        
-        axios.post('./api/registerCompany', updatedData).then(() => {
-            toast.success('Company registered...')
-            router.refresh()
-            reset()
-            }).catch(
-            () => toast.error("something went wrong!!!")
-        ).finally(
-                () => setisLoading(false)
-            )
+      setisLoading(true)
+      
+      const updatedData = {...data, productCategories: pcategories}
+      
+      axios.post('./api/registerCompany', updatedData).then(() => {
+        toast.success('Company registered...')
+        router.refresh()
+        reset()
+      }).catch(
+        () => toast.error("something went wrong!!!")
+      ).finally(
+        () => setisLoading(false)
+      )
     }
-  return (
-    <>
+
+    //checking if user is logged in and display a message instead of form...
+    if(!currentUser) {
+        return <NullData title='You have to log in first...' />
+    }
+    
+    return (
+      <>
         <Heading title='Register Your Company to E-shop' center/>
         <hr className='bg-slate-300 w-full'/>
         <p>Fill and submit the following form to register your company...</p>

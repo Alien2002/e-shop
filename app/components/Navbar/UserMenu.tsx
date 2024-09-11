@@ -7,11 +7,11 @@ import Link from "next/link"
 import MenuItem from "./MenuItem"
 import { signOut } from "next-auth/react"
 import BackDrop from "./BackDrop"
-import { safeUser } from "@/types"
+import { safeUser, userWithCompany } from "@/types"
 import { Company } from "@prisma/client"
 
 interface CurrentUserProps {
-    currentUser: safeUser & {company: Company}
+    currentUser: userWithCompany | null
 }
 
 const UserMenu = ({currentUser}: CurrentUserProps) => {

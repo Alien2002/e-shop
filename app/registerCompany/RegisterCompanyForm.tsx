@@ -8,7 +8,7 @@ import Button from '../components/Button'
 import axios from "axios"
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
-import { safeUser } from '@/types'
+import { userWithCompany } from '@/types'
 import NullData from '../components/NullData'
 import TextArea from '../components/inputs/TextArea'
 import { categories } from '@/utilities/categories'
@@ -16,7 +16,7 @@ import CategoryInput from '../components/inputs/CategoryInput'
 import { Company } from '@prisma/client'
 
 interface CurrentUserProps {
-    currentUser: safeUser & {company: Company}
+    currentUser: userWithCompany | null
 }
 
 const RegisterForm = ({currentUser}: CurrentUserProps) => {
@@ -55,15 +55,6 @@ const RegisterForm = ({currentUser}: CurrentUserProps) => {
       }
     },[currentUser])
     
-    //if having a company prevent new registration.........
-    if(currentUser.company) {
-      return <>
-        <NullData title='Already have a company...'
-          paragraph={`${currentUser.company.companyName.toUpperCase()} is Registered under your email already.`}
-          redirectMsg='Redirecting...'
-          />
-      </>
-    }
     
     const onsubmit: SubmitHandler<FieldValues> = (data) => {
       setisLoading(true)
@@ -80,10 +71,20 @@ const RegisterForm = ({currentUser}: CurrentUserProps) => {
         () => setisLoading(false)
       )
     }
-
+    
     //checking if user is logged in and display a message instead of form...
     if(!currentUser) {
-        return <NullData title='You have to log in first...' />
+      return <NullData title='You have to log in first...' />
+    }
+    
+    //if having a company prevent new registration.........
+    if(currentUser.company) {
+      return <>
+        <NullData title='Already have a company...'
+          paragraph={`${currentUser.company.companyName.toUpperCase()} is Registered under your email already.`}
+          redirectMsg='Redirecting...'
+          />
+      </>
     }
     
     return (

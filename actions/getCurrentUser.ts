@@ -21,7 +21,8 @@ export async function getCurrentUser() {
                 email: session.user.email
             },
             include: {
-                orders: true
+                orders: true,
+                company: true
             }
         })
 

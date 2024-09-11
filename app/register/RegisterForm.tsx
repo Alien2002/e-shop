@@ -23,7 +23,8 @@ const RegisterForm = ({currentUser}: CurrentUserProps) => {
         defaultValues: {
             name: '',
             email: '',
-            password: ''
+            password: '',
+            company: {}
         }})
 
     const router = useRouter();

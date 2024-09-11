@@ -8,9 +8,10 @@ import MenuItem from "./MenuItem"
 import { signOut } from "next-auth/react"
 import BackDrop from "./BackDrop"
 import { safeUser } from "@/types"
+import { Company } from "@prisma/client"
 
 interface CurrentUserProps {
-    currentUser: safeUser
+    currentUser: safeUser & {company: Company}
 }
 
 const UserMenu = ({currentUser}: CurrentUserProps) => {
@@ -38,6 +39,16 @@ const UserMenu = ({currentUser}: CurrentUserProps) => {
                         <Link href={"/admin"}>
                             <MenuItem onclick={toggleOpen}>Admin Dashboard</MenuItem>
                         </Link>
+                        {currentUser.company? 
+                            <Link href={'/companyDashboard'}>
+                                <MenuItem onclick={toggleOpen}>Your Company</MenuItem>
+                            </Link> 
+                        : 
+                            <Link href={'/registerCompany'}>
+                                <MenuItem onclick={toggleOpen}>Register Company</MenuItem>
+                            </Link>
+                        }
+                        
                         <hr />
                         <Link href={"/orders"}>
                             <MenuItem onclick={() => {

@@ -18,6 +18,7 @@ model User {
   role          Role @default(USER)
   orders        Order[]
   cartProducts  cartProducts[]
+  company       Company?
  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -75,6 +76,7 @@ model cartProducts {
 model product {
   id                String  @id @default(auto()) @map("_id") @db.ObjectId
   name              String
+  companyId         String?  @db.ObjectId
   description       String
   price             Float
   brand             String
@@ -82,6 +84,8 @@ model product {
   inStock           Boolean
   images            Image[]
   reviews           Review[]
+
+  company           Company? @relation(fields: [companyId], references: [id])
 }
 
 model Review {
@@ -95,9 +99,23 @@ createdAt         DateTime  @default(now())
 product           product @relation(fields: [productId], references: [id])
 user              User  @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
+
+model Company {
+  id              String  @id @default(auto())  @map("_id") @db.ObjectId
+  userId          String @db.ObjectId @unique
+  companyName     String
+  productCategories String[]
+  officeLocation    String
+  companyDescription  String
+  createdDate     DateTime  @default(now())
+  product         product[]
+
+  user            User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
  
 enum Role {
     USER
+    COMPANY_MANAGER
     ADMIN
 } 
 

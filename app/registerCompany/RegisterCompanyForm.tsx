@@ -53,6 +53,7 @@ const RegisterForm = ({currentUser}: CurrentUserProps) => {
     }
 
     useEffect(() => {
+      if(!currentUser) return;
       if(currentUser.company) {
         router.push('/companyDashboard')
       }

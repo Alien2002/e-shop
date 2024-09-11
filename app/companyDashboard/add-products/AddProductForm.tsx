@@ -59,6 +59,7 @@ const AddProductForm = ({currentUser}: currentUserProps) => {
       return <NullData title="Your need to Register your company" />
     }
     useEffect(() => {
+      if(!currentUser) return;
       if(!currentUser.company) {
         router.push('/registerCompany')
         router.refresh()

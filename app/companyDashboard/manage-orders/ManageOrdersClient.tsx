@@ -1,7 +1,7 @@
 'use client'
 
 import { formatPrice } from "@/utilities/formatPrice"
-import { Order,  User } from "@prisma/client"
+import { Company, Order,  User } from "@prisma/client"
 import { DataGrid, GridColDef }  from '@mui/x-data-grid'
 import Heading from "@/app/components/Heading"
 import Status from "@/app/components/Status"
@@ -14,14 +14,26 @@ import { useRouter } from "next/navigation"
 import moment from "moment"
 
 interface ManageOrdersClientProps {
-  orders: ExtendedOrder[]
+  orders: ExtendedOrder[],
+  company: Company | null
 }
 
 export type ExtendedOrder = Order & { user: User}
 
-const ManageOrdersClient = ({orders}: ManageOrdersClientProps) => {
+const ManageOrdersClient = ({orders, company}: ManageOrdersClientProps) => {
 
   const router = useRouter()
+
+  const filteredProducts = orders.map((order) => {
+    return {
+      products: order.products.filter((item) => {
+        if(company) return item.companyId === company.id
+
+        return false
+      })
+    }
+  })
+
 
   let rows: any = []
   //checking for existance of products...

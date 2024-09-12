@@ -25,7 +25,6 @@ export const CartContextProvider = (props: Props) => {
     const [CartTotalQuantity, setCartTotalQuantity] = useState(0)
     const [CartProducts, setCartProducts] = useState<CartProductType[] | null>(null)
     const [cartItemsTotalCost, setcartItemsTotalCost] = useState(0)
-    const [isUserLoggedIn, setIsUserLoggedIn] = useState();
 
     //setting cart product at initial loading... 
     useEffect(() => {
@@ -34,12 +33,6 @@ export const CartContextProvider = (props: Props) => {
 
         setCartProducts(cProduct)
     },[])
-
-    // useEffect(() => {
-    //     if(!isUserLoggedIn) {
-    //         localStorage.setItem('EshopCartItems', JSON.stringify(null))
-    //     }
-    // },[isUserLoggedIn])
 
     //calculating subtotal cost of the products in the cart...
     useEffect(() =>{

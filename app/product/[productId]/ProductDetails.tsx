@@ -12,6 +12,7 @@ import ProductImage from '@/app/components/products/ProductImage';
 import { useCart } from '@/hooks/useCart';
 import { MdCheckCircle } from 'react-icons/md';
 import { useRouter } from 'next/navigation';
+import { cartProductType, Company, Review } from '@prisma/client';
 
 const Horizontal = () => {
     return <hr className='w-[30%] my-2' /> 
@@ -19,6 +20,7 @@ const Horizontal = () => {
 
 export type CartProductType = {
     id: string,
+    companyId: string | null,
     name: string,
     description: string,
     category: string,
@@ -36,16 +38,16 @@ export type SelectedImage = {
 
 interface ProductDetailsProps {
     product: any;
+    company: Company | null;
     isUserLoggedIn: boolean;
 }
 
-const ProductDetails = ({product, isUserLoggedIn}: ProductDetailsProps) => {
-    console.log(product)
-
+const ProductDetails = ({product, company, isUserLoggedIn}: ProductDetailsProps) => {
     const {handleAddProductToCart, CartProducts} = useCart()
     const [isProductInCart, setIsProductInCart] = useState(false)
     const [cartProduct, setcartProduct] = useState<CartProductType>({
         id: product.id,
+        companyId: product.companyId,
         name: product.name,
         description: product.description,
         category: product.category,
@@ -89,6 +91,8 @@ const ProductDetails = ({product, isUserLoggedIn}: ProductDetailsProps) => {
         })
     }, [ cartProduct ])
 
+
+
   return (
     <Container>
         <div className='grid grid-cols-1 md:grid-cols-2 gap-12'>
@@ -111,6 +115,13 @@ const ProductDetails = ({product, isUserLoggedIn}: ProductDetailsProps) => {
                 <Horizontal />
                 <div className='text-justify'>{product.description}</div>
                 <Horizontal />
+                <div>
+                    {product.companyId?
+                        <><span className='font-semibold'>COMPANY: </span>
+                        <span>{company?.companyName.toUpperCase()}</span></>
+                    : 
+                        null}
+                </div>
                 <div>
                     <span className='font-semibold'>CATEGORY: </span>
                     <span>{product.category}</span>

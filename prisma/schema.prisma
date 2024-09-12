@@ -121,6 +121,7 @@ enum Role {
 
 type cartProductType {
     id            String
+    companyId     String?
     name          String
     description   String
     category      String

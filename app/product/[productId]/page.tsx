@@ -4,6 +4,7 @@ import RatingList from "@/app/components/products/RatingList";
 import { getCurrentUser } from "@/actions/getCurrentUser";
 import Prisma from '@/libs/prismadb'
 import AddRating from "./AddRating";
+import getCompanyById from "@/actions/getCompanyById";
 
 
 
@@ -30,11 +31,15 @@ export default async function productOne({params}: {params: Iparams}) {
   })
 
   if(product) {
+    
+    //getting company info for the company owning the product.....
+    const company = await getCompanyById(product.companyId)
+
     return (
       <div>
         <Container> 
 
-          <ProductDetails product={product} isUserLoggedIn={currentUser? true : false}/>
+          <ProductDetails product={product} company={company} isUserLoggedIn={currentUser? true : false}/>
   
           <div className="flex flex-col gap-4 mt-20">
             <div>

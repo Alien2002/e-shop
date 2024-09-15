@@ -47,15 +47,17 @@ const AddRating = ({product, user}: AddRatingProps) => {
         const ratingData = {
             ...data,
             userId: user.id,
-            product: product
+            prod: product
         }
+        console.log("Data>>>>>>",ratingData)
         
-        axios.post('/api/rating', ratingData).then(() => {
+        axios.post('../api/rating', ratingData).then(() => {
             toast.success('Comment Submitted')
             router.refresh()
-            reset
+            reset()
         }).catch((error) => {
-            toast.error('Something went wrong')
+            console.log(">>>>>>", error)
+            toast.error('Something went wrong...')
         }).finally(() => {
             setIsLoading(false)
         })
@@ -65,7 +67,7 @@ const AddRating = ({product, user}: AddRatingProps) => {
 
     //checking if the user had already made an order once and it was delivered.........
     const deliveredOrder = user.orders.some(
-        order => order.products.find(
+        order =>  order.products.find(
             item => item.id === product.id
         ) 
         && 
@@ -78,7 +80,7 @@ const AddRating = ({product, user}: AddRatingProps) => {
     })
 
     //returning error if user had created review before or he had not yet received the product before.....
-    if(userReview || !deliveredOrder) {
+    if(!deliveredOrder || userReview) {
         return null
     }
 

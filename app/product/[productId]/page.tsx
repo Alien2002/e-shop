@@ -5,10 +5,12 @@ import { getCurrentUser } from "@/actions/getCurrentUser";
 import Prisma from '@/libs/prismadb'
 import AddRating from "./AddRating";
 import getCompanyById from "@/actions/getCompanyById";
+import getProducts from "@/actions/getProducts";
+import getProductById from "@/actions/getProductById";
 
 
 
-interface Iparams {
+export interface Iparams {
     productId?: string
 }
 
@@ -17,18 +19,9 @@ export default async function productOne({params}: {params: Iparams}) {
   //getting current user.........
   const currentUser = await getCurrentUser()
   
-  const product = await Prisma.product.findUnique({
-    where: {
-      id: params.productId
-    },
-    include: {
-      reviews: {
-        orderBy: {
-          createdAt: 'desc'
-        }
-      }
-    }
-  })
+  const product = await getProductById(params)
+
+
 
   if(product) {
     

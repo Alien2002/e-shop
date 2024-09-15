@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 import toast from "react-hot-toast";
 import Prisma from '@/libs/prismadb'
 
-export async function POST(request: Request) {
+export async function POST(request: Request, params?: string) {
     const currentUser = await getCurrentUser();
 
     if(!currentUser) {
@@ -13,19 +13,19 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json()
-    const {comment, rating, product, userId} = body
+    const {comment, rating, prod, userId} = body
 
     //checking if the user had already made an order once and it was delivered.........
     const deliveredOrder = currentUser.orders.some(
         order => order.products.find(
-            item => item.id === product.id
+            item => item.id === prod.id
         ) 
-        && 
+        &&
         order.deliveryStatus === 'delivered'
     );
 
     //checking if the user had once created a review..........
-    const userReview = product.review.find((review: Review) => {
+    const userReview = prod.reviews.find((review: Review) => {
         return review.userId === currentUser.id
     })
 
@@ -39,7 +39,7 @@ export async function POST(request: Request) {
         data: {
             comment,
             rating,
-            productId: product.id,
+            productId: prod.id,
             userId,
         }
     })
